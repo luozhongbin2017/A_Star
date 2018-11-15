@@ -1,4 +1,5 @@
 import time
+from graphics import *
 
 class A_Star:
     def __init__(self):
@@ -85,6 +86,9 @@ class A_Star:
         self.path.reverse()
 
         self.draw_path()
+        vis = Visualizer(self.grid)
+        vis.draw_fancy_path()
+        time.sleep(2)
 
     def draw_path(self):
 
@@ -105,7 +109,33 @@ class A_Star:
                 else:
                     print("X".center(padding), end="")
             print ("")
-        
+
+class Visualizer:
+    def __init__(self, grid):
+        self.window_width = 500
+        self.window_height = 500
+        self.grid = grid
+
+    def draw_fancy_path(self):
+        win = GraphWin('Map', self.window_width, self.window_height)
+
+        win.setCoords(20.0, 20.0, 0.0, 0.0)
+        win.setBackground("gray")
+
+        # draw grid
+        for x in range(len(self.grid[0])):
+            for y in range(len(self.grid)):
+                win.plotPixel(x*self.window_width/len(self.grid[0]), y*self.window_height/len(self.grid), "white")
+
+    def draw_square(self, cell, colour):
+
+        square = Rectangle(Point(5,5), Point(6,6))
+        square.draw(win)
+        square.setFill("black")
+
+        win.getMouse()
+        win.close()
+
 
 if __name__ == '__main__':
     astar = A_Star()
