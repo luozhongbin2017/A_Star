@@ -1,5 +1,6 @@
 import time
 from graphics import *
+from math import sqrt
 
 class A_Star:
     def __init__(self):
@@ -34,7 +35,7 @@ class A_Star:
         self.parent_dict = {}
         self.alpha = 1
         self.beta = 1
-        self.h_type = "manhattan"
+        self.h_type = "eucl"
 
     def heuristic (self, cell):
         if self.h_type == "manhattan":
@@ -116,27 +117,30 @@ class Visualizer:
         self.window_height = 500
         self.grid = grid
 
+        self.win = GraphWin('Map', self.window_width, self.window_height)
+        self.win.setCoords(20.0, 20.0, 20.0, 0.0)
+        self.win.setBackground("gray")
+
     def draw_fancy_path(self):
-        win = GraphWin('Map', self.window_width, self.window_height)
-
-        win.setCoords(20.0, 20.0, 0.0, 0.0)
-        win.setBackground("gray")
-
         # draw grid
         for x in range(len(self.grid[0])):
             for y in range(len(self.grid)):
-                win.plotPixel(x*self.window_width/len(self.grid[0]), y*self.window_height/len(self.grid), "white")
+                self.win.plotPixel(x*self.window_width/len(self.grid[0]), y*self.window_height/len(self.grid), "white")
+        self.draw_square((2,3),"green")
+        self.win.getMouse()
+        self.win.close()
 
     def draw_square(self, cell, colour):
+        cell_width = 1 # self.window_width/len(self.grid[0])
+        print (cell_width)
+        square = Rectangle(Point(cell[1]-cell_width, cell[0]-cell_width), Point(cell[1]+cell_width, cell[0]+cell_width))
+        square.draw(self.win)
+        square.setFill(colour)
 
-        square = Rectangle(Point(5,5), Point(6,6))
-        square.draw(win)
-        square.setFill("black")
+        self.win.getMouse()
+        self.win.close()
 
-        win.getMouse()
-        win.close()
-
-
+ 
 if __name__ == '__main__':
     astar = A_Star()
     astar.find_path()
