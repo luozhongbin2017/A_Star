@@ -33,7 +33,7 @@ class A_Star:
         self.wall_value = 255
         self.path = []
         self.parent_dict = {}
-        self.alpha = 1
+        self.alpha = 1.6
         self.beta = 1
         self.h_type = "eucl"
 
@@ -52,7 +52,7 @@ class A_Star:
                         and curr_cell[0]+di in range (0, len(self.grid))
                         and curr_cell[1]+dj in range (0, len(self.grid[0]))
                         and self.grid[curr_cell[0]+di][curr_cell[1]+dj] != self.wall_value):
-                            cost = self.alpha*self.grid[curr_cell[0]+di][curr_cell[1]+dj]
+                            cost = self.alpha*self.grid[curr_cell[0]+di][curr_cell[1]+dj] * sqrt(di**2 + dj**2)
                             heur = self.beta*self.heuristic((curr_cell[0]+di, curr_cell[1]+dj))
                             #print ("Cost: {}, Heur:{}".format(cost,heur))
                             self.open_set[(curr_cell[0]+di, curr_cell[1]+dj)] = cost + heur
@@ -87,8 +87,6 @@ class A_Star:
         self.path.reverse()
 
         self.draw_path()
-        vis = Visualizer(self.grid)
-        vis.draw_fancy_path()
         time.sleep(2)
 
     def draw_path(self):
@@ -131,9 +129,10 @@ class Visualizer:
         self.win.close()
 
     def draw_square(self, cell, colour):
-        cell_width = 1 # self.window_width/len(self.grid[0])
+        cell_width = self.window_width/len(self.grid[0])
         print (cell_width)
-        square = Rectangle(Point(cell[1]-cell_width, cell[0]-cell_width), Point(cell[1]+cell_width, cell[0]+cell_width))
+        square = Rectangle(Point(cell[1]*cell_width-cell_width/2.0, cell[0]*cell_width-cell_width/2.0),
+                           Point(cell[1]*cell_width+cell_width/2.0, cell[0]*cell_width+cell_width/2.0))
         square.draw(self.win)
         square.setFill(colour)
 
